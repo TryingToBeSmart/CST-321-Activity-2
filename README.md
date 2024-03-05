@@ -4,12 +4,12 @@
 
 #### Using the Linux fork()
 
-This first program uses the fork() [using_fork.c](./using_fork.c) function to create a duplicate process. The main function calls the fork() function for the pid_t data type which creates 2 identical processes. The difference between them is the process ID. The child has an Id of 0 and the parent is some larger number. The if statement filters the process into the parentFunction or childFunction based on their pid number.
-![Console and program running](../screenshots/1.png)
+This [first program](./using_fork.c) uses the fork()  function to create a duplicate process. The main function calls the fork() function for the pid_t data type which creates 2 identical processes. The difference between them is the process ID. The child has an Id of 0 and the parent is some larger number. The if statement filters the process into the parentFunction or childFunction based on their pid number.
+![Console and program running](./screenshots/1.png)
 
 #### Using posix_spawn() functions
 
-This program focuses on using posix_spawn to spawn a child process which then calls a shell command by passing the argument to '/bin/sh'. The waitpid() function tells the parent process to wait for the child to complete before completing it's own process.
+This next program focuses on using [posix_spawn](./posix_spawn.c) to spawn a child process which then calls a shell command by passing the argument to '/bin/sh'. The waitpid() function tells the parent process to wait for the child to complete before completing it's own process.
 According to the Linux manual, posix_spawn takes several aguments:
 int posix_spawn(pid_t *pid,
 const char *path,
@@ -27,12 +27,12 @@ More specifically in my program here are the aguments:
 - argv: argument vector. The first argument is typically be the path to the executable, then the commands to be executed. the last element must be NULL to indicate the end of the argument list.
 - envp: environment variables (NULL in this case).
 
-![](../screenshots/2.png)
+![](./screenshots/2.png)
 
 ## Signals in Linux
 
-This next program uses fork() in the main function to create a child process, then calls their respective functions based on the pid to determine if they are the parent or child. The parent becomes a producer of a signal and the child becomes the consumer. Both functions begin at relatively the same time, but the consumer function uses the pause() function to sit idle. When the producer reaches the 5th iteration in the loop, it uses the kill(pid, WAKEUP) function to send out a WAKEUP signal to the pid. If the pid is 0, the consumer_process will use the handle_signal function which sets the received_signal flag to 1, indicating that the wakeup signal has been received. When the consumer receives that signal, the operating system interrupts the execution of the pause() function and then continues.
-![](../screenshots/3.png)
+This next program, [signals](./signals.c), uses fork() in the main function to create a child process, then calls their respective functions based on the pid to determine if they are the parent or child. The parent becomes a producer of a signal and the child becomes the consumer. Both functions begin at relatively the same time, but the consumer function uses the pause() function to sit idle. When the producer reaches the 5th iteration in the loop, it uses the kill(pid, WAKEUP) function to send out a WAKEUP signal to the pid. If the pid is 0, the consumer_process will use the handle_signal function which sets the received_signal flag to 1, indicating that the wakeup signal has been received. When the consumer receives that signal, the operating system interrupts the execution of the pause() function and then continues.
+![](./screenshots/3.png)
 
 ## Threads in Linux using POSIX thread functions
 
@@ -61,7 +61,7 @@ There are 4 different segments of memory at the application's disposal.
 3. Stack: holds the function calls and local variables.  They are pushed onto the stack and then are popped off when they are finished being used.
 
 Thanks to: <https://www.youtube.com/watch?v=_8-ht2AKyH4&ab_channel=mycodeschool>
-![Memory allocation](../screenshots/4.png)
+![Memory allocation](./screenshots/4.png)
 
 4. Heap: the only segment that can grow while the application is running. It is a dynamic free store of memory.  The only way to access the heap is by using pointers.  In C, 4 functions are used: 
     - malloc: used to allocate an amount of memory in the heap. 
@@ -82,4 +82,4 @@ Thanks to: <https://www.youtube.com/watch?v=_8-ht2AKyH4&ab_channel=mycodeschool>
     - calloc
     - realloc
 
-
+#### And another thing: pthreads
