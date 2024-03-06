@@ -83,3 +83,21 @@ Thanks to: <https://www.youtube.com/watch?v=_8-ht2AKyH4&ab_channel=mycodeschool>
     - realloc
 
 #### And another thing: pthreads
+From the manual: 
+``` 
+int pthread_create(pthread_t *thread, 
+                    const pthread_attr_t *attr,
+                    void *(*start_routine) (void *), 
+                    void *arg);
+```
+The ```void *(*start_routine) (void *)``` part is a pointer to a function and is where we start the function from.  It returns a 'void *' and it accepts a 'void *' which basically means that it is a pointer to anything.
+
+### Now to our next program
+The [thread progam](./thread.c) shows how we can use the pthread_create() to create threads and pthread_join() to wait for each thread to exit before exiting the main program.  I used 1 pthread_create() function that will create new threads and take in 4 arguments:
+1. Address location to store the id as its first argument.
+2. Attributes for the new thread like detached state, stack size, or schedule priority (NULL in this case).
+3. Function that the new thread will execute. thread() is the function in my case that simply prints out a message with the thread ID.
+4. Pointer to data that will be passed to the thread function. In this case it is the thread ID
+
+Then the thread() function receives the thread ID as an argument and extracts it to print to the console.
+![Thread program](./screenshots/5.png)
