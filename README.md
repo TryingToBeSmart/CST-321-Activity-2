@@ -101,3 +101,51 @@ The [thread progam](./thread.c) shows how we can use the pthread_create() to cre
 
 Then the thread() function receives the thread ID as an argument and extracts it to print to the console.
 ![Thread program](./screenshots/5.png)
+
+## Mutex and Semaphore
+### Bad Bank Program
+Our first program shows how not to ask multiple threads to manipulate a single shared int 1 million times each.  This is by using a bad bank program where 2 threads go and add $1 a million times to a shared balance.  The problem is, when 1 of them is using the balance, the other one doesn't no to wait their turn and they end up adding to the same version of balance at times.  Meaning they both might think the balance is $10 and they both add $1 at the same time, then they both declare that the balance is $11 even though 10 + 1 + 1 should be 12.  
+
+The total balance at the end should be $2 million, but it ends up being much less.
+![](./screenshots/6.png)
+
+### Working Bank Program using Mutexes
+Now we added the mutex to lock down the critical area of the deposit() function.  Now only 1 thread is allowed to access the critical area at a time:
+```
+// *** Start of Critical Region ***
+        // lock it down for 1 thread at a time
+        pthread_mutex_lock(&mutex);
+
+        // Copy the balance to local var, add $1 to the balance,
+        // and save the balance to the global var
+        tmp = balance;
+        tmp = tmp + 1;
+        balance = tmp;
+
+        // *** End of Critical region ***
+        // Unlock
+        pthread_mutex_unlock(&mutex);
+```
+And we get the correct balance at the end.
+![](./screenshots/7.png)
+
+### Working Bank Program using Semaphores
+Now we used a semaphore in a similar way by locking down the area of the code that manipulates the balance.  We initially only give 1 thread access at a time, so basically we are using the semaphore as a mutex when we add the '1' as the last argument of this: ```semaphore = sem_open("Semaphore", O_CREAT, 00644, 1);```
+
+Then, this is the part that locks down the critical area.
+
+```
+// *** Start of Critical Region ***
+        // lock it down for 1 thread at a time
+        sem_wait(semaphore);
+
+        // Copy the balance to local var, add $1 to the balance,
+        // and save the balance to the global var
+        tmp = balance;
+        tmp = tmp + 1;
+        balance = tmp;
+
+        // *** End of Critical region ***
+        // Unlock
+        sem_post(semaphore);
+```
