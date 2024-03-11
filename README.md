@@ -24,7 +24,7 @@ More specifically in my program here are the aguments:
 - path: the path to the shell executable.
 - file_actions: actions to perform on the file descriptors in the child process (NULL in this case).
 - attrp: process attributes. Resource limits could be specified here. (NULL in this case).
-- argv: argument vector. The first argument is typically be the path to the executable, then the commands to be executed. the last element must be NULL to indicate the end of the argument list.
+- argv: argument vector. The first argument is typically the path to the executable, then the commands to be executed. the last element must be NULL to indicate the end of the argument list.
 - envp: environment variables (NULL in this case).
 
 ![](./screenshots/2.png)
@@ -38,7 +38,7 @@ This next program, [signals](./signals.c), uses fork() in the main function to c
 
 #### But first, pointers are variables that store the address of another variable
 
-Using \* in front of the variable declares it as pointer. In other words it uses the value that is stored in that address. Using & is the address-of operator and gets the address of a variable.
+Using \* in front of the variable declares it as pointer. In other words, it uses the value that is stored in that address. Using & is the address-of operator and gets the address of a variable.
 
 Examples:
 
@@ -57,7 +57,7 @@ print a // 8 because p was pointing to a's address and changed it
 #### But also first (2nd): stack vs heap
 There are 4 different segments of memory at the application's disposal.  
 1. Code: holds the text instructions.  
-2. Static/Global: holds the global variables (not declared inside a function) that are held during the entire life of the application and are accessable anywhere.
+2. Static/Global: holds the global variables (not declared inside a function) that are held during the entire life of the application and are accessible anywhere.
 3. Stack: holds the function calls and local variables.  They are pushed onto the stack and then are popped off when they are finished being used.
 
 Thanks to: <https://www.youtube.com/watch?v=_8-ht2AKyH4&ab_channel=mycodeschool>
@@ -97,14 +97,14 @@ The [thread progam](./thread.c) shows how we can use the pthread_create() to cre
 1. Address location to store the id as its first argument.
 2. Attributes for the new thread like detached state, stack size, or schedule priority (NULL in this case).
 3. Function that the new thread will execute. thread() is the function in my case that simply prints out a message with the thread ID.
-4. Pointer to data that will be passed to the thread function. In this case it is the thread ID
+4. Pointer to data that will be passed to the thread function. In this case, it is the thread ID
 
 Then the thread() function receives the thread ID as an argument and extracts it to print to the console.
 ![Thread program](./screenshots/5.png)
 
 ## Mutex and Semaphore
 ### Bad Bank Program
-Our first program shows how not to ask multiple threads to manipulate a single shared int 1 million times each.  This is by using a bad bank program where 2 threads go and add $1 a million times to a shared balance.  The problem is, when 1 of them is using the balance, the other one doesn't no to wait their turn and they end up adding to the same version of balance at times.  Meaning they both might think the balance is $10 and they both add $1 at the same time, then they both declare that the balance is $11 even though 10 + 1 + 1 should be 12.  
+Our first program shows how not to ask multiple threads to manipulate a single shared int 1 million times each.  This is by using a bad bank program where 2 threads go and add $1 a million times to a shared balance.  The problem is, when 1 of them is using the balance, the other one doesn't wait their turn and they end up adding to the same version of balance at times.  Meaning they both might think the balance is $10 and they both add $1 at the same time, then they both declare that the balance is $11 even though 10 + 1 + 1 should be 12.  
 
 The total balance at the end should be $2 million, but it ends up being much less.
 ![](./screenshots/6.png)
